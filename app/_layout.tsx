@@ -1,15 +1,8 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  StatusBar,
-  useColorScheme,
-  Appearance,
-} from "react-native";
-import React, { useEffect } from "react";
-import { SplashScreen, Stack } from "expo-router";
-import { useFonts } from "expo-font";
 import { ThemeProvider } from "@rneui/themed";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import React from "react";
+import { StatusBar } from "react-native";
 import theme from "./theme/theme";
 
 const RootLayout = () => {

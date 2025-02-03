@@ -5,22 +5,31 @@ const DefaultStyles = StyleSheet.create({
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
+  tabScreenContainer: {
+    height: "96%",
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+  },
   text: {
     fontFamily: "JockeyOne",
   },
   textsm: {
     fontFamily: "JockeyOne",
-    fontSize: 10,
+    fontSize: 12,
   },
   textlg: {
     fontFamily: "JockeyOne",
-    fontSize: 18,
+    fontSize: 16,
   },
   textxl: {
     fontFamily: "JockeyOne",
-    fontSize: 24,
+    fontSize: 20,
   },
   text2xl: {
+    fontFamily: "JockeyOne",
+    fontSize: 24,
+  },
+  text3xl: {
     fontFamily: "JockeyOne",
     fontSize: 32,
   },
@@ -33,6 +42,17 @@ const DefaultStyles = StyleSheet.create({
   button: {
     height: 50,
     borderRadius: 8,
+  },
+  searchContainer: {
+    backgroundColor: "transparent",
+    padding: 0,
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+  },
+  addButton: {
+    height: 50,
+    width: 50,
+    borderRadius: 16,
   },
 });
 
