@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Button, useTheme } from "@rneui/themed";
 import DefaultStyles from "../app/theme/defaultStyles";
@@ -14,8 +14,8 @@ interface Props {
 const HomeCategories = (props: Props) => {
   const theme = useTheme().theme;
   return (
-    <Button
-      buttonStyle={[
+    <Pressable
+      style={[
         styles.buttonStyle,
         {
           backgroundColor: props.selected
@@ -58,7 +58,7 @@ const HomeCategories = (props: Props) => {
           {props.categoryCount}
         </Text>
       </View>
-    </Button>
+    </Pressable>
   );
 };
 
@@ -70,6 +70,9 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     borderWidth: 1,
     marginRight: 4,
+    flexDirection: "row",
+    padding: 8,
+    alignItems: "center",
   },
   countStyle: {
     width: 25,

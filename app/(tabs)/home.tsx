@@ -62,7 +62,6 @@ const home = () => {
           }}
           contentContainerStyle={{
             alignItems: "center",
-            height: "auto",
             paddingVertical: 8,
           }}
         >
@@ -79,7 +78,7 @@ const home = () => {
         </ScrollView>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={{ flexGrow: 0 }}
+          style={{ flexGrow: 0, height: "90%" }}
         >
           {data[categoryIndex].errands.map((errandItem, index) => (
             <ErrandCard key={index} data={errandItem} />
