@@ -1,13 +1,7 @@
-import { Tabs } from "expo-router";
-import {
-  Pressable,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
 import Octicons from "@expo/vector-icons/Octicons";
 import { useTheme } from "@rneui/themed";
+import { Tabs } from "expo-router";
+import { Pressable, StyleSheet, View } from "react-native";
 
 export default () => {
   const theme = useTheme().theme;
@@ -112,7 +106,7 @@ export default () => {
 const styles = StyleSheet.create({
   navBar: {
     position: "absolute",
-    bottom: 30,
+    bottom: 20,
     height: 70,
     marginHorizontal: 16,
     borderRadius: 24,

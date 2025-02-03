@@ -1,5 +1,9 @@
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Button, Input, Text } from "@rneui/base";
+import { useTheme, useThemeMode } from "@rneui/themed";
+import { router } from "expo-router";
+import React, { useEffect, useState } from "react";
 import {
-  Alert,
   Appearance,
   KeyboardAvoidingView,
   SafeAreaView,
@@ -7,24 +11,15 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { Button, Text, Input } from "@rneui/base";
-import React, { useEffect, useState } from "react";
-import { useTheme, useThemeMode } from "@rneui/themed";
-import DefaultStyles from "./theme/globalStyles";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, router } from "expo-router";
+import DefaultStyles from "./theme/defaultStyles";
 
 const Index = () => {
   //Appearance.setColorScheme("light");
   const theme = useTheme().theme;
-  const { mode, setMode } = useThemeMode();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    Appearance.setColorScheme(mode);
-  }, [mode]);
 
   return (
     <SafeAreaView style={{ backgroundColor: theme.colors.background }}>
@@ -151,10 +146,7 @@ const Index = () => {
                 ]}
                 type="outline"
                 onPress={() => {
-                  setMode(mode === "dark" ? "light" : "dark");
-                  StatusBar.setBarStyle(
-                    mode === "dark" ? "dark-content" : "light-content"
-                  );
+                  console.log("GOOGLE LOGIN");
                 }}
               >
                 <FontAwesome

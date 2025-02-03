@@ -1,0 +1,146 @@
+[
+  {
+    "id": 1,
+    "title": "Take vitamins",
+    "notes": "",
+    "status": "todo",
+    "category": "daily",
+    "startDate": "2024-11-07T12:21:01.358Z",
+    "repeat": "daily",
+    "repeatDayOfWeek": ["Mon"],
+    "repeatDayOfMonth": [1]
+  },
+  {
+    "id": 2,
+    "title": "Exercise for 30 mins",
+    "notes": "add jogging or cycling",
+    "status": "todo",
+    "category": "daily",
+    "startDate": "2024-11-11T16:00:00.000Z",
+    "repeat": "daily",
+    "repeatDayOfWeek": ["Mon"],
+    "repeatDayOfMonth": [1]
+  },
+  {
+    "id": 3,
+    "title": "Clean your desk",
+    "notes": "",
+    "status": "todo",
+    "category": "daily",
+    "startDate": "2024-11-11T16:00:00.000Z",
+    "repeat": "daily",
+    "repeatDayOfWeek": ["Mon"],
+    "repeatDayOfMonth": [1]
+  },
+  {
+    "id": 4,
+    "title": "Clean room",
+    "notes": "Lorem ipsum odor amet, consectetuer",
+    "status": "todo",
+    "category": "weekly",
+    "startDate": "2024-11-07T16:00:00.000Z",
+    "repeat": "weekly",
+    "repeatDayOfWeek": ["Sat"],
+    "repeatDayOfMonth": [1]
+  },
+  {
+    "id": 5,
+    "title": "Wash and fold clothes",
+    "notes": "Lorem ipsum odor amet, consectetuer",
+    "status": "todo",
+    "category": "weekly",
+    "startDate": "2024-11-07T13:06:50.665Z",
+    "repeat": "weekly",
+    "repeatDayOfWeek": ["Sun", "Sat"],
+    "repeatDayOfMonth": [1]
+  },
+  {
+    "id": 6,
+    "title": "Work updates",
+    "notes": "Lorem ipsum odor amet, consectetuer",
+    "status": "todo",
+    "category": "weekly",
+    "startDate": "2024-11-07T13:06:50.665Z",
+    "repeat": "weekly",
+    "repeatDayOfWeek": ["Mon", "Wed", "Fri"],
+    "repeatDayOfMonth": [1]
+  },
+  {
+    "id": 7,
+    "title": "Check reports",
+    "notes": "Lorem ipsum odor amet, consectetuer",
+    "status": "todo",
+    "category": "weekly",
+    "startDate": "2024-11-07T13:06:50.665Z",
+    "repeat": "weekly",
+    "repeatDayOfWeek": ["Tue", "Thu"],
+    "repeatDayOfMonth": [1]
+  },
+  {
+    "id": 8,
+    "title": "Pay rent",
+    "notes": "bank transfer to landlord",
+    "status": "todo",
+    "category": "monthly",
+    "startDate": "2024-11-07T13:47:31.079Z",
+    "repeat": "monthly",
+    "repeatDayOfWeek": ["Mon"],
+    "repeatDayOfMonth": [32]
+  },
+  {
+    "id": 9,
+    "title": "Pay utility bills",
+    "notes": "water, electricity, internet",
+    "status": "todo",
+    "category": "monthly",
+    "startDate": "2024-11-07T13:47:31.079Z",
+    "repeat": "monthly",
+    "repeatDayOfWeek": ["Mon"],
+    "repeatDayOfMonth": [1, 15]
+  },
+  {
+    "id": 10,
+    "title": "Add search feature",
+    "notes": "check documentation for requirements",
+    "status": "todo",
+    "category": "todo",
+    "startDate": "2024-11-07T13:47:31.079Z",
+    "repeat": "none",
+    "repeatDayOfWeek": ["Mon"],
+    "repeatDayOfMonth": [32]
+  },
+  {
+    "id": 11,
+    "title": "Check operrands analytics",
+    "notes": "check documentation for requirements",
+    "status": "todo",
+    "category": "todo",
+    "startDate": "2024-11-07T13:47:31.079Z",
+    "repeat": "monthly",
+    "repeatDayOfWeek": ["Mon"],
+    "repeatDayOfMonth": [1, 15]
+  },
+  {
+    "id": 12,
+    "title": "Add search feature",
+    "notes": "check documentation for requirements",
+    "status": "todo",
+    "category": "todo",
+    "startDate": "2024-11-07T13:47:31.079Z",
+    "repeat": "none",
+    "repeatDayOfWeek": ["Mon"],
+    "repeatDayOfMonth": [32]
+  },
+  {
+    "id": 12,
+    "title": "Add search feature",
+    "notes": "check documentation for requirements",
+    "status": "todo",
+    "category": "todo",
+    "dueDate": "2024-11-16T16:00:00.000Z",
+    "startDate": "2024-11-07T13:47:31.079Z",
+    "repeat": "none",
+    "repeatDayOfWeek": ["Mon"],
+    "repeatDayOfMonth": [32]
+  }
+]
