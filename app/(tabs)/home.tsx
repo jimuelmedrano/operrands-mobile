@@ -7,11 +7,15 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import HomeCategories from "../../components/HomeCategories";
 import ErrandCard from "../../components/ErrandCard";
 import getHomeErrands from "../../sample-data/getHomeErrands.json";
+import moment from "moment";
 
 const home = () => {
   const theme = useTheme().theme;
   const [categoryIndex, setCategoryIndex] = useState(0);
   const data = getHomeErrands;
+  const currentDate = new Date();
+  const formattedDate = moment(currentDate).format("MMM DD, YYYY");
+  const formattedDay = moment(currentDate).format("dddd");
 
   return (
     <SafeAreaView
@@ -32,7 +36,7 @@ const home = () => {
               </Text>
             </Text>
             <Text style={[DefaultStyles.text, { color: theme.colors.black }]}>
-              Today is Wednesday, Jan. 30, 2025
+              {"Today is " + formattedDay + ", " + formattedDate}
             </Text>
           </View>
 
