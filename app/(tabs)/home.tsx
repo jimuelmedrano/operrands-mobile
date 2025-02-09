@@ -1,4 +1,11 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import DefaultStyles from "../theme/defaultStyles";
 import { useTheme } from "@rneui/themed";
@@ -8,6 +15,7 @@ import HomeCategories from "../../components/HomeCategories";
 import ErrandCard from "../../components/ErrandCard";
 import getHomeErrands from "../../sample-data/getHomeErrands.json";
 import moment from "moment";
+import { router, Router } from "expo-router";
 
 const home = () => {
   const theme = useTheme().theme;
@@ -40,17 +48,21 @@ const home = () => {
             </Text>
           </View>
 
-          <Button
-            titleStyle={{ color: theme.colors.black }}
-            buttonStyle={[
+          <Pressable
+            style={[
               DefaultStyles.addButton,
               {
+                alignItems: "center",
+                justifyContent: "center",
                 backgroundColor: theme.colors.grey1,
               },
             ]}
+            onPress={() => {
+              router.push("add/errands");
+            }}
           >
             <FontAwesome name="plus" size={16} color={theme.colors.primary} />
-          </Button>
+          </Pressable>
         </View>
 
         <ScrollView
