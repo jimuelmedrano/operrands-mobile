@@ -10,6 +10,10 @@ const DefaultStyles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 4,
   },
+  screenContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+  },
   text: {
     fontFamily: "JockeyOne",
   },
@@ -41,7 +45,7 @@ const DefaultStyles = StyleSheet.create({
   },
   button: {
     height: 50,
-    borderRadius: 8,
+    borderRadius: 16,
   },
   searchContainer: {
     backgroundColor: "transparent",
