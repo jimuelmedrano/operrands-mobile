@@ -1,3 +1,8 @@
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useTheme } from "@rneui/themed";
+import { router } from "expo-router";
+import moment from "moment";
+import React, { useState } from "react";
 import {
   Pressable,
   SafeAreaView,
@@ -6,16 +11,10 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useState } from "react";
-import DefaultStyles from "../theme/defaultStyles";
-import { useTheme } from "@rneui/themed";
-import { Button } from "@rneui/base";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import HomeCategories from "../../components/HomeCategories";
 import ErrandCard from "../../components/ErrandCard";
+import HomeCategories from "../../components/HomeCategories";
 import getHomeErrands from "../../sample-data/getHomeErrands.json";
-import moment from "moment";
-import { router, Router } from "expo-router";
+import DefaultStyles from "../theme/defaultStyles";
 
 const home = () => {
   const theme = useTheme().theme;
@@ -110,7 +109,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 8,
-    marginBottom: 24,
+    marginBottom: 16,
   },
   homeErrandsContainer: {
     height: "20%",

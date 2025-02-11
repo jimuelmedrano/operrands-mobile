@@ -7,7 +7,7 @@ import {
   TextInput,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import DefaultStyles from "../theme/defaultStyles";
 import { Button, Input, useTheme } from "@rneui/themed";
 import { router } from "expo-router";
@@ -17,10 +17,13 @@ import CustomPicker from "../../components/CustomPicker";
 import getCategoryList from "../../sample-data/getCategoryList.json";
 import repeatOptions from "../../utils/repeatOptions";
 import CustomDatePicker from "../../components/CustomDatePicker";
+import SelectWeekDays from "../../components/SelectWeekDays";
+import SelectMonthDays from "../../components/SelectMonthDays";
 
 const errands = () => {
   const theme = useTheme().theme;
   const categoryList = getCategoryList;
+  const [repeat, setRepeat] = useState("none");
   const {
     control,
     handleSubmit,
@@ -30,11 +33,17 @@ const errands = () => {
       title: "",
       notes: "",
       category: "",
+      status: "todo",
       repeat: "",
       due: new Date(),
+      startDate: new Date(),
+      repeatDayOfWeek: [],
+      repeatDayOfMonth: [],
     },
   });
-  const onSubmit = (data: FieldValues) => console.log(data);
+  const onSubmit = (data: FieldValues) => {
+    console.log(data);
+  };
   return (
     <SafeAreaView
       style={[
@@ -209,7 +218,10 @@ const errands = () => {
               render={({ field: { onChange, onBlur, value } }) => (
                 <CustomPicker
                   data={repeatOptions}
-                  handleSelect={onChange}
+                  handleSelect={(repeatValue) => {
+                    onChange(repeatValue);
+                    setRepeat(repeatValue);
+                  }}
                   placeHolder="Select repeat"
                 />
               )}
@@ -223,23 +235,107 @@ const errands = () => {
           </View>
 
           {/* Due date select field*/}
-          <View>
-            <Text
-              style={[
-                DefaultStyles.textlg,
-                { color: theme.colors.black, marginBottom: 4 },
-              ]}
-            >
-              Repeat
-            </Text>
-            <Controller
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <CustomDatePicker />
+          {repeat === "none" && (
+            <View>
+              <Text
+                style={[
+                  DefaultStyles.textlg,
+                  { color: theme.colors.black, marginBottom: 4 },
+                ]}
+              >
+                Due date
+              </Text>
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <CustomDatePicker handleSelect={onChange} />
+                )}
+                name="due"
+              />
+            </View>
+          )}
+
+          {/* Start date select field*/}
+          {repeat === "daily" && (
+            <View>
+              <Text
+                style={[
+                  DefaultStyles.textlg,
+                  { color: theme.colors.black, marginBottom: 4 },
+                ]}
+              >
+                Start Date
+              </Text>
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <CustomDatePicker handleSelect={onChange} />
+                )}
+                name="startDate"
+              />
+            </View>
+          )}
+
+          {/* Repeat week days select field*/}
+          {repeat === "weekly" && (
+            <View>
+              <Text
+                style={[
+                  DefaultStyles.textlg,
+                  { color: theme.colors.black, marginBottom: 4 },
+                ]}
+              >
+                Repeat days
+              </Text>
+              <Controller
+                control={control}
+                rules={{
+                  required: repeat === "weekly",
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <SelectWeekDays handleSelect={onChange} />
+                )}
+                name="repeatDayOfWeek"
+              />
+              {errors.repeatDayOfWeek && (
+                <Text
+                  style={[DefaultStyles.text, { color: theme.colors.error }]}
+                >
+                  Repeat day is required.
+                </Text>
               )}
-              name="due"
-            />
-          </View>
+            </View>
+          )}
+          {/* Repeat month days select field*/}
+          {repeat === "monthly" && (
+            <View>
+              <Text
+                style={[
+                  DefaultStyles.textlg,
+                  { color: theme.colors.black, marginBottom: 4 },
+                ]}
+              >
+                Repeat days
+              </Text>
+              <Controller
+                control={control}
+                rules={{
+                  required: repeat === "monthly",
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <SelectMonthDays handleSelect={onChange} />
+                )}
+                name="repeatDayOfMonth"
+              />
+              {errors.repeatDayOfMonth && (
+                <Text
+                  style={[DefaultStyles.text, { color: theme.colors.error }]}
+                >
+                  Repeat day is required.
+                </Text>
+              )}
+            </View>
+          )}
         </ScrollView>
         <View
           style={{
