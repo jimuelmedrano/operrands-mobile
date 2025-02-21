@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import ErrandCard from "../../components/ErrandCard";
 import HomeCategories from "../../components/HomeCategories";
-import getHomeErrands from "../../sample-data/getHomeErrands.json";
+import { getHomeErrands } from "../../sample-data/sampledata";
 import DefaultStyles from "../theme/defaultStyles";
 
 const home = () => {
@@ -91,9 +91,10 @@ const home = () => {
           showsVerticalScrollIndicator={false}
           style={{ flexGrow: 0, height: "90%" }}
         >
-          {data[categoryIndex].errands.map((errandItem, index) => (
-            <ErrandCard key={index} data={errandItem} />
-          ))}
+          {data[categoryIndex].errands.map((errandItem, index) => {
+            const newErrandItem = errandItem;
+            return <ErrandCard key={index} data={errandItem} />;
+          })}
           <View style={{ height: 100 }} />
         </ScrollView>
       </View>

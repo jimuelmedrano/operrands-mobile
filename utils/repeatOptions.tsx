@@ -1,20 +1,3 @@
-const repeatOptions = [
-  {
-    value: "none",
-    label: "None",
-  },
-  {
-    value: "daily",
-    label: "Daily",
-  },
-  {
-    value: "weekly",
-    label: "Weekly",
-  },
-  {
-    value: "monthly",
-    label: "Monthly",
-  },
-];
+const repeatOptions = ["None", "Daily", "Weekly", "Monthly"];
 
 export default repeatOptions;
