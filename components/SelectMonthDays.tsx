@@ -7,12 +7,16 @@ import DefaultStyles from "../app/theme/defaultStyles";
 
 const SelectMonthDays = ({
   handleSelect,
+  defaultValue,
 }: {
   handleSelect: (selectedValue: number[]) => void;
+  defaultValue?: number[];
 }) => {
   const theme = useTheme().theme;
   const [visible, setVisible] = useState(false);
-  const [selected, setSelected] = useState(new Array());
+  const [selected, setSelected] = useState(
+    defaultValue ? defaultValue : new Array()
+  );
   const days = Array.from(Array(33).keys());
 
   const toggleOverlay = () => {

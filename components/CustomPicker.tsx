@@ -5,23 +5,20 @@ import React, { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import DefaultStyles from "../app/theme/defaultStyles";
 
-interface DataProps {
-  value: string;
-  label: string;
-}
-
 const CustomPicker = ({
   data,
   handleSelect,
   placeHolder,
+  defaultValue,
 }: {
-  data: DataProps[];
+  data: string[];
   handleSelect: (selectedValue: string) => void;
   placeHolder: string;
+  defaultValue?: string;
 }) => {
   const theme = useTheme().theme;
   const [visible, setVisible] = useState(false);
-  const [value, setValue] = useState(placeHolder);
+  const [value, setValue] = useState(defaultValue ? defaultValue : placeHolder);
 
   const toggleOverlay = () => {
     setVisible(!visible);
@@ -112,8 +109,8 @@ const CustomPicker = ({
                 key={index}
                 style={{ marginVertical: 4 }}
                 onPress={() => {
-                  setValue(category.label);
-                  handleSelect(category.value);
+                  setValue(category);
+                  handleSelect(category);
                   toggleOverlay();
                 }}
               >
@@ -127,7 +124,7 @@ const CustomPicker = ({
                     },
                   ]}
                 >
-                  {category.label}
+                  {category}
                 </Text>
                 <Divider />
               </Pressable>

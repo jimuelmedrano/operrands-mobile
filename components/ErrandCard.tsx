@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { useTheme } from "@rneui/themed";
 import DefaultStyles from "../app/theme/defaultStyles";
@@ -6,29 +6,42 @@ import { CheckBox } from "@rneui/themed";
 import { Divider } from "@rneui/themed";
 import moment from "moment";
 import { getOrdinal, getLastDayOfTheMonth } from "../utils/date";
-
-interface ErrandItemProps {
-  id: number;
-  title: string;
-  notes: string;
-  status: string;
-  category: string;
-  startDate: string;
-  repeat: string;
-  repeatDayOfWeek: string[];
-  repeatDayOfMonth: number[];
-  dueDate?: string;
-}
+import EditErrandsOverlay from "./EditErrandsOverlay";
+import { ErrandItemProps } from "../utils/interface";
 
 const ErrandCard = (data: { data: ErrandItemProps }) => {
   const theme = useTheme().theme;
   const [check, setCheck] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
   return (
     <View style={[styles.cardContainer, { borderColor: theme.colors.primary }]}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text style={[DefaultStyles.textlg, { color: theme.colors.black }]}>
-          {data.data.title}
-        </Text>
+        <Pressable
+          onPress={() => {
+            toggleOverlay();
+          }}
+        >
+          <Text style={[DefaultStyles.textlg, { color: theme.colors.black }]}>
+            {data.data.title}
+          </Text>
+          <Text
+            style={[
+              DefaultStyles.text,
+              { color: theme.colors.grey3, marginBottom: 8 },
+            ]}
+            numberOfLines={1}
+          >
+            {data.data.notes}
+          </Text>
+        </Pressable>
+        <EditErrandsOverlay
+          open={visible}
+          data={data.data}
+          toggleOpen={toggleOverlay}
+        />
 
         <CheckBox
           checked={check}
@@ -43,15 +56,7 @@ const ErrandCard = (data: { data: ErrandItemProps }) => {
           onPress={() => setCheck(!check)}
         />
       </View>
-      <Text
-        style={[
-          DefaultStyles.text,
-          { color: theme.colors.grey3, marginBottom: 8 },
-        ]}
-        numberOfLines={1}
-      >
-        {data.data.notes}
-      </Text>
+
       <Divider />
       <Text
         style={[
@@ -83,15 +88,15 @@ function getFooter(dataItem: ErrandItemProps) {
   let footerText = null;
   const currentDate = new Date();
 
-  if (dataItem.repeat === "daily") {
+  if (dataItem.repeat === "Daily") {
     dueToday = true;
     footerText = "Daily";
-  } else if (dataItem.repeat === "weekly") {
+  } else if (dataItem.repeat === "Weekly") {
     footerText = dataItem.repeatDayOfWeek.toString();
     //If today is included in repeat day of week, set due today to true
     dataItem.repeatDayOfWeek.find((e) => e === moment().format("ddd")) !==
       undefined && (dueToday = true);
-  } else if (dataItem.repeat === "monthly") {
+  } else if (dataItem.repeat === "Monthly") {
     dataItem.repeatDayOfMonth.sort((a, b) => a - b);
     let monthlyFooter: string[] = [];
     dataItem.repeatDayOfMonth.forEach((element) => {
@@ -107,7 +112,7 @@ function getFooter(dataItem: ErrandItemProps) {
     footerText = monthlyFooter.toString();
   } else {
     dataItem.dueDate !== undefined &&
-      (footerText = moment(Date.parse(dataItem.dueDate)).format("DD-MMM-YYYY"));
+      (footerText = moment(dataItem.dueDate).format("DD-MMM-YYYY"));
   }
   return footerText;
 }

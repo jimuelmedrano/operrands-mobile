@@ -3,15 +3,21 @@ import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import DefaultStyles from "../app/theme/defaultStyles";
 
-const SelectWeekDays = (handleSelect: {
+const SelectWeekDays = ({
+  handleSelect,
+  defaultValue,
+}: {
   handleSelect: (selectedDays: String[]) => void;
+  defaultValue?: String[];
 }) => {
   const theme = useTheme().theme;
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const [selected, setSelected] = useState(new Array());
+  const [selected, setSelected] = useState(
+    defaultValue ? defaultValue : new Array()
+  );
 
   useEffect(() => {
-    handleSelect.handleSelect(selected);
+    handleSelect(selected);
   }, [selected]);
 
   return (

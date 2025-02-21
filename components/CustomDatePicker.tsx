@@ -6,13 +6,17 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import DatePicker from "react-native-date-picker";
 import DefaultStyles from "../app/theme/defaultStyles";
 
-const CustomDatePicker = (handleSelect: {
+const CustomDatePicker = ({
+  handleSelect,
+  defaultValue,
+}: {
   handleSelect: (selectedValue: Date) => void;
+  defaultValue?: Date;
 }) => {
   const theme = useTheme().theme;
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(defaultValue ? defaultValue : new Date());
   const [open, setOpen] = useState(false);
-  const [dateSelected, setDateSelected] = useState(false);
+  const [dateSelected, setDateSelected] = useState(defaultValue ? true : false);
   return (
     <View>
       <Pressable
@@ -64,7 +68,7 @@ const CustomDatePicker = (handleSelect: {
         onConfirm={(date) => {
           setOpen(false);
           setDateSelected(true);
-          handleSelect.handleSelect(date);
+          handleSelect(date);
           setDate(date);
         }}
         onCancel={() => {
