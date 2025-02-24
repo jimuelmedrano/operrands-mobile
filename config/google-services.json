@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "320329774854",
+    "project_id": "operrands-dev",
+    "storage_bucket": "operrands-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320329774854:android:3b47cea07542b85148d087",
+        "android_client_info": {
+          "package_name": "com.renzapp.operrands"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "320329774854-819fql9dafo6k684padm9fjj7t7c0995.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.renzapp.operrands",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "320329774854-vpucb1qb87lirooolqrlp545ifcuj51q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLLIdSKL8hSIUJ5jPKtDflXIfpafjo9is"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "320329774854-vpucb1qb87lirooolqrlp545ifcuj51q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "320329774854-q2a9fkn29rkb0k3lppkhkhkps270ap56.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.renzapp.operrands"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

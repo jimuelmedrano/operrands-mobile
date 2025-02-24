@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "operrands-mobile",
-    "scheme": "operrands-mobile",
-    "slug": "operrands-mobile",
+    "name": "operrands",
+    "scheme": "operrands",
+    "slug": "operrands",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,14 +15,16 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.operrandsmobile"
+      "googleServicesFile": "./config/GoogleService-Info.plist",
+      "bundleIdentifier": "com.renzapp.operrands"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.operrandsmobile"
+      "googleServicesFile": "./config/google-services.json",
+      "package": "com.renzapp.operrands"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -32,9 +34,17 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/JockeyOne-Regular.ttf"]
+          "fonts": ["./assets/fonts/JockeyOne.ttf"]
         }
-      ]
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": { "useFrameworks": "static" }
+        }
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth"
     ]
   }
 }

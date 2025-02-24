@@ -9,26 +9,7 @@ import ErrandForm from "../../components/ErrandForm";
 
 const errands = () => {
   const theme = useTheme().theme;
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      title: "",
-      notes: "",
-      category: "",
-      status: "todo",
-      repeat: "",
-      due: new Date(),
-      startDate: new Date(),
-      repeatDayOfWeek: [],
-      repeatDayOfMonth: [],
-    },
-  });
-  const onSubmit = (data: FieldValues) => {
-    console.log(data);
-  };
+
   return (
     <SafeAreaView
       style={[
