@@ -6,14 +6,36 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Button, Input, useTheme } from "@rneui/themed";
-import DefaultStyles from "./theme/defaultStyles";
+import DefaultStyles from "../theme/defaultStyles";
 import { router } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { getAuth } from "@react-native-firebase/auth";
+import { FirebaseError } from "@firebase/util";
 
 const signup = () => {
   const theme = useTheme().theme;
+  const auth = getAuth();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const signUp = async () => {
+    setLoading(true);
+    console.log(email, password);
+    try {
+      await auth.createUserWithEmailAndPassword(email, password);
+      alert("Account created! Welcome to Operrands. ");
+    } catch (e: any) {
+      const err = e as FirebaseError;
+      alert("Sign up failed: " + err.message);
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView
@@ -69,6 +91,7 @@ const signup = () => {
                 errorStyle={{ marginVertical: 0 }}
                 inputMode="email"
                 placeholder="Enter email"
+                onChangeText={setEmail}
               />
               <Input
                 inputContainerStyle={[
@@ -82,22 +105,21 @@ const signup = () => {
                 containerStyle={{
                   paddingHorizontal: 0,
                 }}
-                inputMode="email"
+                secureTextEntry
                 placeholder="Enter password"
+                onChangeText={setPassword}
               />
             </KeyboardAvoidingView>
 
             <View style={{ gap: 16 }}>
               <Button
-                title={"Create account"}
+                title={loading ? "Creating your account..." : "Create account"}
                 titleStyle={[DefaultStyles.text, { color: theme.colors.white }]}
                 buttonStyle={[
                   DefaultStyles.button,
                   { backgroundColor: theme.colors.primary },
                 ]}
-                onPress={() => {
-                  console.log("SIGN UP");
-                }}
+                onPress={signUp}
               />
 
               <View style={{ flexDirection: "row", alignItems: "center" }}>

@@ -5,42 +5,36 @@ import React, { useEffect, useState } from "react";
 import { StatusBar, View } from "react-native";
 import theme from "./theme/theme";
 import { FirebaseAuthTypes, getAuth } from "@react-native-firebase/auth";
-import * as SplashScreen from "expo-splash-screen";
+import { SplashScreen } from "expo-router";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import googleServicesFile from "../config/google-services.json";
+
+SplashScreen.preventAutoHideAsync();
+
+export const unstable_settings = {
+  initialRouteName: "(auth)",
+};
 
 const RootLayout = () => {
-  const auth = getAuth();
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>();
-  const router = useRouter();
-  const segments = useSegments();
-
-  const onAuthStateChanged = (user: FirebaseAuthTypes.User | null) => {
-    console.log("onAuthStateChanged", user);
-    setUser(user);
-    if (initializing) setInitializing(false);
-  };
+  const [loaded, error] = useFonts({
+    JockeyOne: require("../assets/fonts/JockeyOne.ttf"),
+  });
 
   useEffect(() => {
-    const subscriber = auth.onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  }, []);
-
-  useEffect(() => {
-    if (initializing) return;
-    const inAuthGroup = segments[0] === "index";
-    if (user && !inAuthGroup) {
-      router.push("(tabs)/home");
-    } else if (!user && inAuthGroup) {
-      router.replace("index");
+    if (loaded) {
+      SplashScreen.hideAsync();
     }
-  }, [user, initializing]);
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
 
   return (
     <ThemeProvider theme={theme}>
       <StatusBar translucent backgroundColor={"transparent"} />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="signup" />
+      <Stack screenOptions={{ headerShown: false }} initialRouteName="(auth)">
+        <Stack.Screen name="(auth)" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="add" />
       </Stack>

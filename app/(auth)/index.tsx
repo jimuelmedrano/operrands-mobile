@@ -1,9 +1,10 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Button, Input, Text } from "@rneui/base";
+import { Button, Input, Overlay, Text } from "@rneui/base";
 import { useTheme, useThemeMode } from "@rneui/themed";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Appearance,
   KeyboardAvoidingView,
   Pressable,
@@ -12,10 +13,10 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import DefaultStyles from "./theme/defaultStyles";
+import DefaultStyles from "../theme/defaultStyles";
 import { FirebaseError } from "firebase/app";
 import { getAuth } from "@react-native-firebase/auth";
-import { onGoogleButtonPress } from "../utils/onGoogleButtonPress";
+import { onGoogleButtonPress } from "../../utils/firebase/onGoogleButtonPress";
 
 const Index = () => {
   const auth = getAuth();
@@ -27,9 +28,9 @@ const Index = () => {
 
   const signIn = async () => {
     setLoading(true);
-    console.log(email, password);
     try {
-      await auth.signInWithEmailAndPassword(email, password);
+      const userInfo = await auth.signInWithEmailAndPassword(email, password);
+      console.log("USERINFO+ " + userInfo.user.displayName);
     } catch (e: any) {
       const err = e as FirebaseError;
       alert("Sign in failed: " + err.message);
@@ -42,6 +43,9 @@ const Index = () => {
   return (
     <SafeAreaView style={{ backgroundColor: theme.colors.background }}>
       <View style={styles.container}>
+        <Overlay isVisible={loading}>
+          <ActivityIndicator size="large" color={theme.colors.primary} />
+        </Overlay>
         <View style={styles.titleContainer}>
           <Text
             style={[

@@ -2,7 +2,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useTheme } from "@rneui/themed";
 import { router } from "expo-router";
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Pressable,
   SafeAreaView,
@@ -15,14 +15,20 @@ import ErrandCard from "../../components/ErrandCard";
 import HomeCategories from "../../components/HomeCategories";
 import { getHomeErrands } from "../../sample-data/sampledata";
 import DefaultStyles from "../theme/defaultStyles";
+import { getAuth } from "@react-native-firebase/auth";
 
 const home = () => {
   const theme = useTheme().theme;
+  const auth = getAuth();
   const [categoryIndex, setCategoryIndex] = useState(0);
   const data = getHomeErrands;
   const currentDate = new Date();
   const formattedDate = moment(currentDate).format("MMM DD, YYYY");
   const formattedDay = moment(currentDate).format("dddd");
+
+  useEffect(() => {
+    console.log("Home screen loaded");
+  });
 
   return (
     <SafeAreaView
@@ -39,7 +45,9 @@ const home = () => {
               <Text
                 style={[DefaultStyles.text, { color: theme.colors.primary }]}
               >
-                Jimuel Medrano
+                {auth.currentUser?.displayName
+                  ? auth.currentUser.displayName
+                  : "Operrands User"}
               </Text>
             </Text>
             <Text style={[DefaultStyles.text, { color: theme.colors.black }]}>

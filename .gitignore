@@ -33,6 +33,8 @@ yarn-error.*
 .env*.local
 /android
 /ios
+/config/google-servcies.json
+/config/GoogleService-Info.plist
 
 # typescript
 *.tsbuildinfo
