@@ -13,22 +13,28 @@ import {
 } from "react-native";
 import ErrandCard from "../../components/ErrandCard";
 import HomeCategories from "../../components/HomeCategories";
-import { getHomeErrands } from "../../sample-data/sampledata";
 import DefaultStyles from "../theme/defaultStyles";
 import { getAuth } from "@react-native-firebase/auth";
+import { getHomeErrands } from "../../utils/firebase/getHomeErrands";
+import { Filter, getFirestore } from "@react-native-firebase/firestore";
+import { getCategoryList } from "../../utils/firebase/getCategoryList";
 
 const home = () => {
   const theme = useTheme().theme;
   const auth = getAuth();
+
   const [categoryIndex, setCategoryIndex] = useState(0);
-  const data = getHomeErrands;
   const currentDate = new Date();
   const formattedDate = moment(currentDate).format("MMM DD, YYYY");
   const formattedDay = moment(currentDate).format("dddd");
 
+  const [categories, setCategories] = useState(new Array());
+  const [errandsData, setErrandsData] = useState(new Array());
+
   useEffect(() => {
-    console.log("Home screen loaded");
-  });
+    getHomeErrands(auth.currentUser!.email!, setErrandsData);
+    getCategoryList(auth.currentUser!.email!, setCategories);
+  }, []);
 
   return (
     <SafeAreaView
@@ -47,7 +53,7 @@ const home = () => {
               >
                 {auth.currentUser?.displayName
                   ? auth.currentUser.displayName
-                  : "Operrands User"}
+                  : auth.currentUser!.email!.split("@")[0]}
               </Text>
             </Text>
             <Text style={[DefaultStyles.text, { color: theme.colors.black }]}>
@@ -84,25 +90,38 @@ const home = () => {
             paddingVertical: 8,
           }}
         >
-          {data.map((errandCategory, index) => (
-            <HomeCategories
-              key={index}
-              selected={index === categoryIndex}
-              handleSelect={setCategoryIndex}
-              index={index}
-              categoryName={errandCategory.categoryTitle}
-              categoryCount={errandCategory.errands.length}
-            />
-          ))}
+          {categories.map((errandCategory, index) => {
+            const categoryTitle =
+              errandCategory === "Daily" ||
+              errandCategory === "Weekly" ||
+              errandCategory === "Monthly"
+                ? errandCategory + " Errands"
+                : errandCategory;
+            return (
+              <HomeCategories
+                key={index}
+                selected={index === categoryIndex}
+                handleSelect={setCategoryIndex}
+                index={index}
+                categoryName={categoryTitle}
+                categoryCount={
+                  errandsData.filter(
+                    (errand) => errand.category === errandCategory
+                  ).length
+                }
+              />
+            );
+          })}
         </ScrollView>
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{ flexGrow: 0, height: "90%" }}
         >
-          {data[categoryIndex].errands.map((errandItem, index) => {
-            const newErrandItem = errandItem;
-            return <ErrandCard key={index} data={errandItem} />;
-          })}
+          {errandsData
+            .filter((errand) => errand.category === categories[categoryIndex])
+            .map((errandItem, index) => {
+              return <ErrandCard key={index} data={errandItem} />;
+            })}
           <View style={{ height: 100 }} />
         </ScrollView>
       </View>

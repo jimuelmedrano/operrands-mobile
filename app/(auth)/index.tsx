@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Appearance,
   KeyboardAvoidingView,
   Pressable,
@@ -17,6 +18,7 @@ import DefaultStyles from "../theme/defaultStyles";
 import { FirebaseError } from "firebase/app";
 import { getAuth } from "@react-native-firebase/auth";
 import { onGoogleButtonPress } from "../../utils/firebase/onGoogleButtonPress";
+import { onSignInUserInfo } from "../../utils/firebase/onSignInUserInfo";
 
 const Index = () => {
   const auth = getAuth();
@@ -30,11 +32,15 @@ const Index = () => {
     setLoading(true);
     try {
       const userInfo = await auth.signInWithEmailAndPassword(email, password);
-      console.log("USERINFO+ " + userInfo.user.displayName);
+      onSignInUserInfo(userInfo.user.displayName, userInfo.user.email);
     } catch (e: any) {
       const err = e as FirebaseError;
-      alert("Sign in failed: " + err.message);
-      console.log(err);
+      const message =
+        err.code === "auth/invalid-credential"
+          ? "Invalid email or password."
+          : err.message.split("]")[1];
+      Alert.alert("Error", message);
+      console.log(err.code);
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,5 @@
 import {
+  Alert,
   KeyboardAvoidingView,
   Pressable,
   SafeAreaView,
@@ -27,10 +28,10 @@ const signup = () => {
     console.log(email, password);
     try {
       await auth.createUserWithEmailAndPassword(email, password);
-      alert("Account created! Welcome to Operrands. ");
+      Alert.alert("Account created! Welcome to Operrands. ");
     } catch (e: any) {
       const err = e as FirebaseError;
-      alert("Sign up failed: " + err.message);
+      Alert.alert("Sign up failed: " + err.message);
       console.log(err);
     } finally {
       setLoading(false);

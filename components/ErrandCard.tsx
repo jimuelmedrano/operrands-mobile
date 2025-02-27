@@ -40,7 +40,7 @@ const ErrandCard = (data: { data: ErrandItemProps }) => {
         <EditErrandsOverlay
           open={visible}
           data={data.data}
-          toggleOpen={toggleOverlay}
+          toggleOpen={() => toggleOverlay()}
         />
 
         <CheckBox
@@ -111,8 +111,9 @@ function getFooter(dataItem: ErrandItemProps) {
     });
     footerText = monthlyFooter.toString();
   } else {
-    dataItem.dueDate !== undefined &&
-      (footerText = moment(dataItem.dueDate).format("DD-MMM-YYYY"));
+    dataItem.dueDate !== undefined ||
+      (dataItem.dueDate === "None" &&
+        (footerText = moment(dataItem.dueDate).format("DD-MMM-YYYY")));
   }
   return footerText;
 }
