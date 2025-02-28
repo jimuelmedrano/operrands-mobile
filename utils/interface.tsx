@@ -1,3 +1,4 @@
+import { Timestamp } from "@react-native-firebase/firestore";
 export interface ErrandItemProps {
   id: string;
   title: string;
@@ -9,6 +10,6 @@ export interface ErrandItemProps {
   repeatDayOfWeek: string[];
   repeatDayOfMonth: number[];
   dueDate?: string;
-  addedDate: Date;
+  addedDate: Timestamp;
   user: string;
 }

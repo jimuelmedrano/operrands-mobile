@@ -32,7 +32,6 @@ const signup = () => {
     } catch (e: any) {
       const err = e as FirebaseError;
       Alert.alert("Sign up failed: " + err.message);
-      console.log(err);
     } finally {
       setLoading(false);
     }

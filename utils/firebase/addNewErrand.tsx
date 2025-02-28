@@ -6,9 +6,8 @@ import {
 import { ErrandItemProps } from "../interface";
 export async function addNewErrand(errandData: ErrandItemProps) {
   const firestore = getFirestore();
-  const db = firestore.collection("errands");
   try {
-    await addDoc(collection(firestore, "cities"), errandData);
+    await addDoc(collection(firestore, "errands"), errandData);
     return true;
   } catch (error) {
     console.log(error);

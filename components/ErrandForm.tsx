@@ -38,6 +38,7 @@ const ErrandForm = ({
   const [categories, setCategories] = useState(new Array());
   const [saving, setSaving] = useState(false);
 
+  console.log(data);
   useEffect(() => {
     getCategoryList(auth.currentUser!.email!, setCategories);
   }, []);
@@ -99,7 +100,7 @@ const ErrandForm = ({
   const onDelete = async (data: FieldValues) => {
     console.log("DELETE: " + JSON.stringify(data));
     Alert.alert(
-      "This errand will be removed permanently. Confirm deletion?",
+      "This errand will be removed permanently. Confirm delete?",
       "",
       [
         {
@@ -111,9 +112,16 @@ const ErrandForm = ({
           onPress: async () => {
             setSaving(true);
             if (await deleteErrand(data as ErrandItemProps)) {
-              if (toggleOpen) {
-                toggleOpen();
-              }
+              Alert.alert("Errand deleted.", "", [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    if (toggleOpen) {
+                      toggleOpen();
+                    }
+                  },
+                },
+              ]);
             } else {
               Alert.alert(
                 "Error!",
@@ -326,7 +334,7 @@ const ErrandForm = ({
               render={({ field: { onChange, onBlur, value } }) => (
                 <CustomDatePicker
                   handleSelect={onChange}
-                  defaultValue={value}
+                  defaultValue={data ? data.addedDate.toDate() : value}
                 />
               )}
               name="startDate"
