@@ -50,7 +50,7 @@ const EditErrandsOverlay = ({
           <FontAwesome name="close" size={16} color={theme.colors.grey3} />
         </Pressable>
       </View>
-      <ErrandForm data={data} />
+      <ErrandForm data={data} toggleOpen={() => toggleOpen()} />
     </Overlay>
   );
 };

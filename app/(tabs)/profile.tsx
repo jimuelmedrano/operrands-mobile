@@ -11,8 +11,10 @@ import React, { useEffect } from "react";
 import DefaultStyles from "../theme/defaultStyles";
 import { useTheme, useThemeMode } from "@rneui/themed";
 import { router } from "expo-router";
+import { getAuth } from "@react-native-firebase/auth";
 
 const profile = () => {
+  const auth = getAuth();
   const theme = useTheme().theme;
   const { mode, setMode } = useThemeMode();
 
@@ -59,6 +61,7 @@ const profile = () => {
             { backgroundColor: theme.colors.error },
           ]}
           onPress={() => {
+            auth.signOut();
             router.dismissAll();
           }}
         />

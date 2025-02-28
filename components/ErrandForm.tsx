@@ -1,9 +1,15 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import DefaultStyles from "../app/theme/defaultStyles";
-import { Button, Input, useTheme } from "@rneui/themed";
+import { Button, Input, Overlay, useTheme } from "@rneui/themed";
 import { Controller, FieldValues, useForm } from "react-hook-form";
-import { getCategoryList } from "../sample-data/sampledata";
 import repeatOptions from "../utils/repeatOptions";
 import CustomPicker from "./CustomPicker";
 import CustomDatePicker from "./CustomDatePicker";
@@ -11,42 +17,129 @@ import SelectWeekDays from "./SelectWeekDays";
 import SelectMonthDays from "./SelectMonthDays";
 import { ErrandItemProps } from "../utils/interface";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import moment from "moment";
+import { getCategoryList } from "../utils/firebase/getCategoryList";
+import { getAuth } from "@react-native-firebase/auth";
+import { addNewErrand } from "../utils/firebase/addNewErrand";
+import { editErrand } from "../utils/firebase/editErrand";
+import { deleteErrand } from "../utils/firebase/deleteErrand";
+import { router } from "expo-router";
 
-const ErrandForm = (data: { data?: ErrandItemProps }) => {
+const ErrandForm = ({
+  data,
+  toggleOpen,
+}: {
+  data?: ErrandItemProps;
+  toggleOpen?: () => void;
+}) => {
   const theme = useTheme().theme;
-  const categoryList = getCategoryList;
-  const [repeat, setRepeat] = useState(data.data ? data.data.repeat : "None");
+  const auth = getAuth();
+  const [repeat, setRepeat] = useState(data ? data.repeat : "None");
+  const [categories, setCategories] = useState(new Array());
+  const [saving, setSaving] = useState(false);
+
+  console.log(data);
+  useEffect(() => {
+    getCategoryList(auth.currentUser!.email!, setCategories);
+  }, []);
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: data.data
-      ? data.data
+    defaultValues: data
+      ? data
       : {
           title: "",
           notes: "",
           category: "",
           status: "todo",
           repeat: "",
-          dueDate: new Date(),
+          dueDate: "None",
           startDate: new Date(),
           repeatDayOfWeek: [],
           repeatDayOfMonth: [],
+          addedDate: new Date(),
+          user: auth.currentUser!.email!,
         },
   });
-  const onSubmitAdd = (data: FieldValues) => {
-    console.log("ADD: " + JSON.stringify(data));
+  const onSubmitAdd = async (data: FieldValues) => {
+    setSaving(true);
+    if (await addNewErrand(data as ErrandItemProps)) {
+      Alert.alert("Success!", "Added new errand.");
+      router.dismissTo("(tabs)/home");
+    } else {
+      Alert.alert(
+        "Error!",
+        "Encountered an error while saving the errand. Please try again later."
+      );
+    }
+    setSaving(false);
   };
-  const onSubmitEdit = (data: FieldValues) => {
-    console.log("EDIT: " + JSON.stringify(data));
+  const onSubmitEdit = async (data: FieldValues) => {
+    setSaving(true);
+    if (await editErrand(data as ErrandItemProps)) {
+      Alert.alert("Success!", "Updated errand details.", [
+        {
+          text: "OK",
+          onPress: () => {
+            if (toggleOpen) {
+              toggleOpen();
+            }
+          },
+        },
+      ]);
+    } else {
+      Alert.alert(
+        "Error!",
+        "Encountered an error while saving the errand. Please try again later."
+      );
+    }
+    setSaving(false);
   };
-  const onDelete = (data: FieldValues) => {
+  const onDelete = async (data: FieldValues) => {
     console.log("DELETE: " + JSON.stringify(data));
+    Alert.alert(
+      "This errand will be removed permanently. Confirm delete?",
+      "",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: async () => {
+            setSaving(true);
+            if (await deleteErrand(data as ErrandItemProps)) {
+              Alert.alert("Errand deleted.", "", [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    if (toggleOpen) {
+                      toggleOpen();
+                    }
+                  },
+                },
+              ]);
+            } else {
+              Alert.alert(
+                "Error!",
+                "Encountered an error while deleting the errand. Please try again later."
+              );
+            }
+            setSaving(false);
+          },
+        },
+      ]
+    );
   };
 
   return (
     <View style={{ flex: 1, paddingTop: 16, justifyContent: "space-between" }}>
+      <Overlay isVisible={saving}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      </Overlay>
       <ScrollView contentContainerStyle={{ rowGap: 8 }}>
         {/* Errand title input field*/}
         <View>
@@ -149,10 +242,10 @@ const ErrandForm = (data: { data?: ErrandItemProps }) => {
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <CustomPicker
-                data={categoryList}
+                data={categories}
                 handleSelect={onChange}
                 placeHolder="Select category"
-                {...(data.data ? { defaultValue: data.data.category } : {})}
+                {...(data ? { defaultValue: data.category } : {})}
               />
             )}
             name="category"
@@ -187,7 +280,7 @@ const ErrandForm = (data: { data?: ErrandItemProps }) => {
                   setRepeat(repeatValue);
                 }}
                 placeHolder="Select repeat"
-                {...(data.data ? { defaultValue: data.data.repeat } : {})}
+                {...(data ? { defaultValue: data.repeat } : {})}
               />
             )}
             name="repeat"
@@ -215,7 +308,9 @@ const ErrandForm = (data: { data?: ErrandItemProps }) => {
               render={({ field: { onChange, onBlur, value } }) => (
                 <CustomDatePicker
                   handleSelect={onChange}
-                  defaultValue={data.data?.dueDate}
+                  {...(value !== "None" && {
+                    defaultValue: moment(data?.dueDate).toDate(),
+                  })}
                 />
               )}
               name="dueDate"
@@ -239,7 +334,7 @@ const ErrandForm = (data: { data?: ErrandItemProps }) => {
               render={({ field: { onChange, onBlur, value } }) => (
                 <CustomDatePicker
                   handleSelect={onChange}
-                  defaultValue={data.data?.startDate}
+                  defaultValue={data ? data.addedDate.toDate() : value}
                 />
               )}
               name="startDate"
@@ -264,10 +359,7 @@ const ErrandForm = (data: { data?: ErrandItemProps }) => {
                 required: repeat === "Weekly",
               }}
               render={({ field: { onChange, onBlur, value } }) => (
-                <SelectWeekDays
-                  handleSelect={onChange}
-                  defaultValue={data.data?.repeatDayOfWeek}
-                />
+                <SelectWeekDays handleSelect={onChange} defaultValue={value} />
               )}
               name="repeatDayOfWeek"
             />
@@ -295,10 +387,7 @@ const ErrandForm = (data: { data?: ErrandItemProps }) => {
                 required: repeat === "Monthly",
               }}
               render={({ field: { onChange, onBlur, value } }) => (
-                <SelectMonthDays
-                  handleSelect={onChange}
-                  defaultValue={data.data?.repeatDayOfMonth}
-                />
+                <SelectMonthDays handleSelect={onChange} defaultValue={value} />
               )}
               name="repeatDayOfMonth"
             />
@@ -311,7 +400,7 @@ const ErrandForm = (data: { data?: ErrandItemProps }) => {
         )}
       </ScrollView>
 
-      {data.data ? (
+      {data ? (
         <View
           style={{
             flexDirection: "row",

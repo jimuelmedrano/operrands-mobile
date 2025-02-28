@@ -18,8 +18,20 @@ const ErrandCard = (data: { data: ErrandItemProps }) => {
   };
   return (
     <View style={[styles.cardContainer, { borderColor: theme.colors.primary }]}>
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          gap: 8,
+        }}
+      >
+        <EditErrandsOverlay
+          open={visible}
+          data={data.data}
+          toggleOpen={() => toggleOverlay()}
+        />
         <Pressable
+          style={{ flex: 1 }}
           onPress={() => {
             toggleOverlay();
           }}
@@ -37,11 +49,6 @@ const ErrandCard = (data: { data: ErrandItemProps }) => {
             {data.data.notes}
           </Text>
         </Pressable>
-        <EditErrandsOverlay
-          open={visible}
-          data={data.data}
-          toggleOpen={toggleOverlay}
-        />
 
         <CheckBox
           checked={check}
@@ -111,8 +118,9 @@ function getFooter(dataItem: ErrandItemProps) {
     });
     footerText = monthlyFooter.toString();
   } else {
-    dataItem.dueDate !== undefined &&
-      (footerText = moment(dataItem.dueDate).format("DD-MMM-YYYY"));
+    dataItem.dueDate !== undefined ||
+      (dataItem.dueDate === "None" &&
+        (footerText = moment(dataItem.dueDate).format("DD-MMM-YYYY")));
   }
   return footerText;
 }
