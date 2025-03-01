@@ -8,6 +8,7 @@ import moment from "moment";
 import { getOrdinal, getLastDayOfTheMonth } from "../utils/date";
 import EditErrandsOverlay from "./EditErrandsOverlay";
 import { ErrandItemProps } from "../utils/interface";
+import Feather from "@expo/vector-icons/Feather";
 
 const ErrandCard = (data: { data: ErrandItemProps }) => {
   const theme = useTheme().theme;
@@ -72,6 +73,10 @@ const ErrandCard = (data: { data: ErrandItemProps }) => {
         ]}
       >
         {getFooter(data.data)}
+        {"  "}
+        {data.data.repeat !== "None" && (
+          <Feather name="repeat" size={14} color={theme.colors.grey3} />
+        )}
       </Text>
     </View>
   );
@@ -118,9 +123,8 @@ function getFooter(dataItem: ErrandItemProps) {
     });
     footerText = monthlyFooter.toString();
   } else {
-    dataItem.dueDate !== undefined ||
-      (dataItem.dueDate === "None" &&
-        (footerText = moment(dataItem.dueDate).format("DD-MMM-YYYY")));
+    dataItem.dueDate &&
+      (footerText = "Due: " + moment(dataItem.dueDate).format("DD-MMM-YYYY"));
   }
   return footerText;
 }

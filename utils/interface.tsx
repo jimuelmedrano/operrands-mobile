@@ -9,7 +9,7 @@ export interface ErrandItemProps {
   repeat: string;
   repeatDayOfWeek: string[];
   repeatDayOfMonth: number[];
-  dueDate?: string;
-  addedDate: Timestamp;
+  dueDate?: Date;
+  addedDate: Date;
   user: string;
 }
