@@ -1,6 +1,8 @@
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
+//import { getAuth } from "@react-native-firebase/auth";
 import { onSignInUserInfo } from "./onSignInUserInfo";
+import { getApp } from "@react-native-firebase/app";
 
 export async function onGoogleButtonPress() {
   try {
@@ -20,9 +22,7 @@ export async function onGoogleButtonPress() {
     }
 
     // Create a Google credential with the token
-    const googleCredential = auth.GoogleAuthProvider.credential(
-      signInResult?.data.idToken
-    );
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
     // Sign-in the user with the credential
     const userInfo = await auth().signInWithCredential(googleCredential);

@@ -1,25 +1,20 @@
 import {
   collection,
-  getDocs,
   getFirestore,
   onSnapshot,
   orderBy,
   query,
+  Timestamp,
   where,
 } from "@react-native-firebase/firestore";
 
-export async function getHomeErrands(
+export function getAllErrands(
   user: string,
   setErrandsData: (errands: Object[]) => void
 ) {
   const firestore = getFirestore();
 
-  const q = query(
-    collection(firestore, "errands"),
-    where("user", "==", user),
-    where("status", "==", "todo"),
-    orderBy("addedDate", "desc")
-  );
+  const q = query(collection(firestore, "errands"), where("user", "==", user));
 
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
     let errandsList: Object[] = [];

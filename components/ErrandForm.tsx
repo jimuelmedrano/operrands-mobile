@@ -38,7 +38,6 @@ const ErrandForm = ({
   const [categories, setCategories] = useState(new Array());
   const [saving, setSaving] = useState(false);
 
-  console.log(data);
   useEffect(() => {
     getCategoryList(auth.currentUser!.email!, setCategories);
   }, []);
@@ -55,7 +54,6 @@ const ErrandForm = ({
           category: "",
           status: "todo",
           repeat: "",
-          dueDate: "None",
           startDate: new Date(),
           repeatDayOfWeek: [],
           repeatDayOfMonth: [],
@@ -64,6 +62,7 @@ const ErrandForm = ({
         },
   });
   const onSubmitAdd = async (data: FieldValues) => {
+    console.log(data);
     setSaving(true);
     if (await addNewErrand(data as ErrandItemProps)) {
       Alert.alert("Success!", "Added new errand.");
@@ -98,7 +97,6 @@ const ErrandForm = ({
     setSaving(false);
   };
   const onDelete = async (data: FieldValues) => {
-    console.log("DELETE: " + JSON.stringify(data));
     Alert.alert(
       "This errand will be removed permanently. Confirm delete?",
       "",
@@ -308,9 +306,7 @@ const ErrandForm = ({
               render={({ field: { onChange, onBlur, value } }) => (
                 <CustomDatePicker
                   handleSelect={onChange}
-                  {...(value !== "None" && {
-                    defaultValue: moment(data?.dueDate).toDate(),
-                  })}
+                  defaultValue={value}
                 />
               )}
               name="dueDate"
@@ -334,7 +330,7 @@ const ErrandForm = ({
               render={({ field: { onChange, onBlur, value } }) => (
                 <CustomDatePicker
                   handleSelect={onChange}
-                  defaultValue={data ? data.addedDate.toDate() : value}
+                  defaultValue={value}
                 />
               )}
               name="startDate"

@@ -1,16 +1,31 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import DefaultStyles from "../theme/defaultStyles";
 import { Button, SearchBar, useTheme } from "@rneui/themed";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { getAllErrands } from "../../utils/firebase/getAllErrands";
+import { getAuth } from "@react-native-firebase/auth";
+import ErrandCard from "../../components/ErrandCard";
+import { Timestamp } from "@react-native-firebase/firestore";
+import { router } from "expo-router";
 
 const search = () => {
   const theme = useTheme().theme;
+  const auth = getAuth();
   const [search, setSearch] = useState("");
-  const updateSearch = (search: React.SetStateAction<string>) => {
-    setSearch(search);
-    console.log(search);
+
+  const [errandsData, setErrandsData] = useState(new Array());
+
+  const filterErrand = (search: string) => {
+    return errandsData.filter((errand) =>
+      JSON.stringify(errand).toLowerCase().includes(search.toLowerCase())
+    );
   };
+
+  useEffect(() => {
+    getAllErrands(auth.currentUser!.email!, setErrandsData);
+  }, []);
+
   return (
     <SafeAreaView
       style={[
@@ -23,7 +38,7 @@ const search = () => {
           <SearchBar
             placeholder="Search"
             round
-            onChangeText={updateSearch}
+            onChangeText={setSearch}
             value={search}
             containerStyle={[DefaultStyles.searchContainer, { flex: 1 }]}
             inputContainerStyle={{ backgroundColor: theme.colors.grey1 }}
@@ -37,10 +52,19 @@ const search = () => {
                 backgroundColor: theme.colors.grey1,
               },
             ]}
+            onPress={() => {
+              router.push("add/errands");
+            }}
           >
             <FontAwesome name="plus" size={16} color={theme.colors.primary} />
           </Button>
         </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {filterErrand(search).map((errandItem, index) => {
+            return <ErrandCard key={index} data={errandItem} />;
+          })}
+          <View style={{ height: 100 }} />
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -55,6 +79,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 50,
     gap: 8,
-    marginVertical: 8,
+    marginTop: 8,
+    marginBottom: 16,
   },
 });
