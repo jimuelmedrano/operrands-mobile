@@ -25,7 +25,7 @@ export function getAllErrands(
         notes: doc.data().notes,
         status: doc.data().status,
         category: doc.data().category,
-        startDate: doc.data().startDate.toDate(),
+        startDate: doc.data().startDate,
         repeat: doc.data().repeat,
         repeatDayOfWeek: doc.data().repeatDayOfWeek,
         repeatDayOfMonth: doc.data().repeatDayOfMonth,

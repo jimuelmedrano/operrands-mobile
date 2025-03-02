@@ -8,6 +8,7 @@ import {
   where,
   writeBatch,
 } from "@react-native-firebase/firestore";
+import moment from "moment";
 
 export async function onSignInUserInfo(
   displayName: string | null,
@@ -57,7 +58,7 @@ async function addDefaultErrands(email: string | null) {
       notes: "Click the add button to create a new errand",
       status: "todo",
       category: "To do",
-      startDate: new Date(),
+      startDate: moment().toISOString().split("T")[0],
       repeat: "None",
       repeatDayOfWeek: ["Mon"],
       repeatDayOfMonth: [1],
@@ -69,7 +70,7 @@ async function addDefaultErrands(email: string | null) {
       notes: "Click the daily errands category button",
       status: "todo",
       category: "To do",
-      startDate: new Date(),
+      startDate: moment().toISOString().split("T")[0],
       repeat: "None",
       repeatDayOfWeek: ["Mon"],
       repeatDayOfMonth: [1],
@@ -81,7 +82,7 @@ async function addDefaultErrands(email: string | null) {
       notes: "Edit or delete this errand by clicking on it",
       status: "todo",
       category: "Daily",
-      startDate: new Date(),
+      startDate: moment().toISOString().split("T")[0],
       repeat: "Daily",
       repeatDayOfWeek: ["Mon"],
       repeatDayOfMonth: [1],
