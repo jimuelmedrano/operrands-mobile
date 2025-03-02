@@ -67,6 +67,7 @@ const ErrandCard = (data: { data: ErrandItemProps }) => {
 
       <Divider />
       <Text
+        numberOfLines={1}
         style={[
           DefaultStyles.text,
           { color: theme.colors.grey3, marginTop: 4, textAlign: "right" },
@@ -102,9 +103,22 @@ function getFooter(dataItem: ErrandItemProps) {
 
   if (dataItem.repeat === "Daily") {
     dueToday = true;
-    footerText = "Daily";
+    footerText = dataItem.time
+      ? "Daily at " +
+        moment(
+          moment().toISOString().split("T")[0] + "T" + dataItem.time
+        ).format("hh:mm A")
+      : "Daily";
   } else if (dataItem.repeat === "Weekly") {
-    footerText = dataItem.repeatDayOfWeek.toString();
+    footerText =
+      "Every " +
+      (dataItem.time
+        ? dataItem.repeatDayOfWeek.toString() +
+          " at " +
+          moment(
+            moment().toISOString().split("T")[0] + "T" + dataItem.time
+          ).format("hh:mm A")
+        : dataItem.repeatDayOfWeek.toString());
     //If today is included in repeat day of week, set due today to true
     dataItem.repeatDayOfWeek.find((e) => e === moment().format("ddd")) !==
       undefined && (dueToday = true);
@@ -121,10 +135,27 @@ function getFooter(dataItem: ErrandItemProps) {
           undefined && (dueToday = true);
       }
     });
-    footerText = monthlyFooter.toString();
+
+    footerText =
+      "Every " +
+      (dataItem.time
+        ? monthlyFooter.toString() +
+          " at " +
+          moment(
+            moment().toISOString().split("T")[0] + "T" + dataItem.time
+          ).format("hh:mm A")
+        : monthlyFooter.toString());
   } else {
-    dataItem.dueDate &&
-      (footerText = "Due: " + moment(dataItem.dueDate).format("DD-MMM-YYYY"));
+    dataItem.dueDate
+      ? dataItem.time
+        ? (footerText =
+            "Due: " +
+            moment(dataItem.dueDate + "T" + dataItem.time).format(
+              "MMM d, YYYY - hh:mm A"
+            ))
+        : ""
+      : "";
+    //(footerText = "Due: " + moment(dataItem.dueDate).format("DD-MMM-YYYY"))
   }
   return footerText;
 }

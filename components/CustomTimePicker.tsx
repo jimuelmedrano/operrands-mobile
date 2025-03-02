@@ -5,8 +5,9 @@ import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import DatePicker from "react-native-date-picker";
 import DefaultStyles from "../app/theme/defaultStyles";
+import { PathString } from "react-hook-form";
 
-const CustomDatePicker = ({
+const CustomTimePicker = ({
   handleSelect,
   defaultValue,
 }: {
@@ -15,7 +16,11 @@ const CustomDatePicker = ({
 }) => {
   const theme = useTheme().theme;
   const [date, setDate] = useState(
-    defaultValue ? moment(defaultValue + "T00:00:00.00Z").toDate() : new Date()
+    defaultValue
+      ? moment(
+          moment().toISOString().split("T")[0] + "T" + defaultValue
+        ).toDate()
+      : new Date()
   );
   const [open, setOpen] = useState(false);
   const [dateSelected, setDateSelected] = useState(defaultValue ? true : false);
@@ -50,27 +55,20 @@ const CustomDatePicker = ({
               },
             ]}
           >
-            {dateSelected
-              ? moment(date).format("MMMM DD, YYYY")
-              : "Select due date"}
+            {dateSelected ? moment(date).format("hh:mm A") : "Set time"}
           </Text>
-          <FontAwesome5
-            name="calendar-alt"
-            size={16}
-            color={theme.colors.black}
-          />
+          <FontAwesome5 name="clock" size={16} color={theme.colors.black} />
         </View>
       </Pressable>
       <DatePicker
         modal
         open={open}
         date={date}
-        mode="date"
-        minimumDate={new Date()}
+        mode="time"
         onConfirm={(date) => {
           setOpen(false);
           setDateSelected(true);
-          handleSelect(moment(date).toISOString().split("T")[0]);
+          handleSelect(date.toISOString().split("T")[1]);
           setDate(date);
         }}
         onCancel={() => {
@@ -81,6 +79,6 @@ const CustomDatePicker = ({
   );
 };
 
-export default CustomDatePicker;
+export default CustomTimePicker;
 
 const styles = StyleSheet.create({});

@@ -30,11 +30,12 @@ export async function getHomeErrands(
         notes: doc.data().notes,
         status: doc.data().status,
         category: doc.data().category,
-        startDate: doc.data().startDate.toDate(),
+        startDate: doc.data().startDate,
         repeat: doc.data().repeat,
         repeatDayOfWeek: doc.data().repeatDayOfWeek,
         repeatDayOfMonth: doc.data().repeatDayOfMonth,
         dueDate: doc.data().dueDate,
+        time: doc.data().time,
         addedDate: doc.data().addedDate.toDate(),
         user: doc.data().user,
       });

@@ -24,6 +24,7 @@ import { addNewErrand } from "../utils/firebase/addNewErrand";
 import { editErrand } from "../utils/firebase/editErrand";
 import { deleteErrand } from "../utils/firebase/deleteErrand";
 import { router } from "expo-router";
+import CustomTimePicker from "./CustomTimePicker";
 
 const ErrandForm = ({
   data,
@@ -54,7 +55,7 @@ const ErrandForm = ({
           category: "",
           status: "todo",
           repeat: "",
-          startDate: new Date(),
+          startDate: moment().toISOString().split("T")[0],
           repeatDayOfWeek: [],
           repeatDayOfMonth: [],
           addedDate: new Date(),
@@ -394,6 +395,23 @@ const ErrandForm = ({
             )}
           </View>
         )}
+        <View>
+          <Text
+            style={[
+              DefaultStyles.textlg,
+              { color: theme.colors.black, marginBottom: 4 },
+            ]}
+          >
+            Time
+          </Text>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomTimePicker handleSelect={onChange} defaultValue={value} />
+            )}
+            name="time"
+          />
+        </View>
       </ScrollView>
 
       {data ? (
@@ -401,6 +419,7 @@ const ErrandForm = ({
           style={{
             flexDirection: "row",
             gap: 8,
+            paddingTop: 16,
           }}
         >
           <View>
