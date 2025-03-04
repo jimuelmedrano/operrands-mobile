@@ -10,11 +10,13 @@ const CustomPicker = ({
   handleSelect,
   placeHolder,
   defaultValue,
+  isDisabled,
 }: {
   data: string[];
   handleSelect: (selectedValue: string) => void;
   placeHolder: string;
   defaultValue?: string;
+  isDisabled?: boolean;
 }) => {
   const theme = useTheme().theme;
   const [visible, setVisible] = useState(false);
@@ -28,6 +30,7 @@ const CustomPicker = ({
     <View>
       <Pressable
         onPress={toggleOverlay}
+        disabled={isDisabled}
         style={[
           DefaultStyles.button,
           {
@@ -52,6 +55,8 @@ const CustomPicker = ({
                 color:
                   placeHolder === value
                     ? theme.colors.grey3
+                    : isDisabled
+                    ? theme.colors.grey3
                     : theme.colors.black,
               },
             ]}
@@ -61,7 +66,7 @@ const CustomPicker = ({
           <FontAwesome
             name="chevron-down"
             size={16}
-            color={theme.colors.black}
+            color={isDisabled ? theme.colors.grey3 : theme.colors.black}
           />
         </View>
       </Pressable>

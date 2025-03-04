@@ -18,29 +18,34 @@ import SelectMonthDays from "./SelectMonthDays";
 import { ErrandItemProps } from "../utils/interface";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import moment from "moment";
-import { getCategoryList } from "../utils/firebase/getCategoryList";
+import { getCategoryList } from "../utils/firebase/categoryCrud";
 import { getAuth } from "@react-native-firebase/auth";
-import { addNewErrand } from "../utils/firebase/addNewErrand";
-import { editErrand } from "../utils/firebase/editErrand";
-import { deleteErrand } from "../utils/firebase/deleteErrand";
+import {
+  addNewErrand,
+  editErrand,
+  deleteErrand,
+} from "../utils/firebase/errandCrud";
 import { router } from "expo-router";
 import CustomTimePicker from "./CustomTimePicker";
 
 const ErrandForm = ({
   data,
   toggleOpen,
+  category,
 }: {
   data?: ErrandItemProps;
   toggleOpen?: () => void;
+  category?: string;
 }) => {
   const theme = useTheme().theme;
   const auth = getAuth();
   const [repeat, setRepeat] = useState(data ? data.repeat : "None");
   const [categories, setCategories] = useState(new Array());
+  const [categoryId, setCategoryId] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    getCategoryList(auth.currentUser!.email!, setCategories);
+    getCategoryList(auth.currentUser!.email!, setCategories, setCategoryId);
   }, []);
   const {
     control,
@@ -52,7 +57,7 @@ const ErrandForm = ({
       : {
           title: "",
           notes: "",
-          category: "",
+          category: category ? category : "",
           status: "todo",
           repeat: "",
           startDate: moment().toISOString().split("T")[0],
@@ -66,8 +71,20 @@ const ErrandForm = ({
     console.log(data);
     setSaving(true);
     if (await addNewErrand(data as ErrandItemProps)) {
-      Alert.alert("Success!", "Added new errand.");
-      router.dismissTo("(tabs)/home");
+      Alert.alert("Success!", "Added new errand.", [
+        {
+          text: "OK",
+          onPress: () => {
+            if (category) {
+              if (toggleOpen) {
+                toggleOpen();
+              }
+            } else {
+              router.dismissTo("(tabs)/home");
+            }
+          },
+        },
+      ]);
     } else {
       Alert.alert(
         "Error!",
@@ -239,12 +256,14 @@ const ErrandForm = ({
             rules={{
               required: true,
             }}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange } }) => (
               <CustomPicker
                 data={categories}
                 handleSelect={onChange}
                 placeHolder="Select category"
                 {...(data ? { defaultValue: data.category } : {})}
+                {...(category ? { defaultValue: category } : {})}
+                isDisabled={category ? true : false}
               />
             )}
             name="category"
@@ -271,7 +290,7 @@ const ErrandForm = ({
             rules={{
               required: true,
             }}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange } }) => (
               <CustomPicker
                 data={repeatOptions}
                 handleSelect={(repeatValue) => {
@@ -304,7 +323,7 @@ const ErrandForm = ({
             </Text>
             <Controller
               control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
+              render={({ field: { onChange, value } }) => (
                 <CustomDatePicker
                   handleSelect={onChange}
                   defaultValue={value}
@@ -328,7 +347,7 @@ const ErrandForm = ({
             </Text>
             <Controller
               control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
+              render={({ field: { onChange, value } }) => (
                 <CustomDatePicker
                   handleSelect={onChange}
                   defaultValue={value}
@@ -355,7 +374,7 @@ const ErrandForm = ({
               rules={{
                 required: repeat === "Weekly",
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
+              render={({ field: { onChange, value } }) => (
                 <SelectWeekDays handleSelect={onChange} defaultValue={value} />
               )}
               name="repeatDayOfWeek"
@@ -383,7 +402,7 @@ const ErrandForm = ({
               rules={{
                 required: repeat === "Monthly",
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
+              render={({ field: { onChange, value } }) => (
                 <SelectMonthDays handleSelect={onChange} defaultValue={value} />
               )}
               name="repeatDayOfMonth"
@@ -406,7 +425,7 @@ const ErrandForm = ({
           </Text>
           <Controller
             control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, value } }) => (
               <CustomTimePicker handleSelect={onChange} defaultValue={value} />
             )}
             name="time"
@@ -473,5 +492,3 @@ const ErrandForm = ({
 };
 
 export default ErrandForm;
-
-const styles = StyleSheet.create({});

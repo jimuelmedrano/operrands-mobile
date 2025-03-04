@@ -4,9 +4,9 @@ import { router } from "expo-router";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import {
+  FlatList,
   Pressable,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -15,9 +15,8 @@ import ErrandCard from "../../components/ErrandCard";
 import HomeCategories from "../../components/HomeCategories";
 import DefaultStyles from "../theme/defaultStyles";
 import { getAuth } from "@react-native-firebase/auth";
-import { getHomeErrands } from "../../utils/firebase/getHomeErrands";
-import { Filter, getFirestore } from "@react-native-firebase/firestore";
-import { getCategoryList } from "../../utils/firebase/getCategoryList";
+import { getHomeErrands } from "../../utils/firebase/errandCrud";
+import { getCategoryList } from "../../utils/firebase/categoryCrud";
 
 const home = () => {
   const theme = useTheme().theme;
@@ -30,10 +29,11 @@ const home = () => {
 
   const [categories, setCategories] = useState(new Array());
   const [errandsData, setErrandsData] = useState(new Array());
+  const [categoryId, setCategoryId] = useState("");
 
   useEffect(() => {
     getHomeErrands(auth.currentUser!.email!, setErrandsData);
-    getCategoryList(auth.currentUser!.email!, setCategories);
+    getCategoryList(auth.currentUser!.email!, setCategories, setCategoryId);
   }, []);
 
   return (
@@ -78,9 +78,10 @@ const home = () => {
           </Pressable>
         </View>
 
-        <ScrollView
+        <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
+          data={categories}
           style={{
             flexGrow: 0,
             marginBottom: 16,
@@ -89,41 +90,45 @@ const home = () => {
             alignItems: "center",
             paddingVertical: 8,
           }}
-        >
-          {categories.map((errandCategory, index) => {
-            const categoryTitle =
-              errandCategory === "Daily" ||
-              errandCategory === "Weekly" ||
-              errandCategory === "Monthly"
-                ? errandCategory + " Errands"
-                : errandCategory;
+          renderItem={({ item, index }) => {
             return (
               <HomeCategories
-                key={index}
                 selected={index === categoryIndex}
                 handleSelect={setCategoryIndex}
                 index={index}
-                categoryName={categoryTitle}
+                categoryName={item}
                 categoryCount={
-                  errandsData.filter(
-                    (errand) => errand.category === errandCategory
-                  ).length
+                  errandsData.filter((errand) => errand.category === item)
+                    .length
                 }
               />
             );
-          })}
-        </ScrollView>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{ flexGrow: 0, height: "90%" }}
-        >
-          {errandsData
-            .filter((errand) => errand.category === categories[categoryIndex])
-            .map((errandItem, index) => {
-              return <ErrandCard key={index} data={errandItem} />;
-            })}
-          <View style={{ height: 100 }} />
-        </ScrollView>
+          }}
+        />
+        {errandsData.filter(
+          (errand) => errand.category === categories[categoryIndex]
+        ).length > 0 ? (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={errandsData.filter(
+              (errand) => errand.category === categories[categoryIndex]
+            )}
+            renderItem={({ item }) => {
+              return <ErrandCard data={item} />;
+            }}
+          />
+        ) : (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <Text style={[DefaultStyles.text, { color: theme.colors.grey3 }]}>
+              No errands in this category
+            </Text>
+            <Text style={[DefaultStyles.text, { color: theme.colors.grey3 }]}>
+              Click + to add new errand
+            </Text>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
