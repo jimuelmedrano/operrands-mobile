@@ -37,62 +37,32 @@ export function getAllErrands(
 ) {
   const firestore = getFirestore();
 
-  const q = query(collection(firestore, "errands"), where("user", "==", user));
-
-  const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    let errandsList: Object[] = [];
-    querySnapshot.forEach((doc) => {
-      errandsList.push({
-        id: doc.id,
-        title: doc.data().title,
-        notes: doc.data().notes,
-        status: doc.data().status,
-        category: doc.data().category,
-        startDate: doc.data().startDate,
-        repeat: doc.data().repeat,
-        repeatDayOfWeek: doc.data().repeatDayOfWeek,
-        repeatDayOfMonth: doc.data().repeatDayOfMonth,
-        dueDate: doc.data().dueDate,
-        addedDate: doc.data().addedDate.toDate(),
-        user: doc.data().user,
-      });
-    });
-    setErrandsData(errandsList);
-  });
-  return () => unsubscribe();
-}
-
-export async function getHomeErrands(
-  user: string,
-  setErrandsData: (errands: Object[]) => void
-) {
-  const firestore = getFirestore();
-
   const q = query(
     collection(firestore, "errands"),
     where("user", "==", user),
-    where("status", "==", "todo"),
     orderBy("addedDate", "desc")
   );
 
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
     let errandsList: Object[] = [];
     querySnapshot.forEach((doc) => {
-      errandsList.push({
-        id: doc.id,
-        title: doc.data().title,
-        notes: doc.data().notes,
-        status: doc.data().status,
-        category: doc.data().category,
-        startDate: doc.data().startDate,
-        repeat: doc.data().repeat,
-        repeatDayOfWeek: doc.data().repeatDayOfWeek,
-        repeatDayOfMonth: doc.data().repeatDayOfMonth,
-        dueDate: doc.data().dueDate,
-        time: doc.data().time,
-        addedDate: doc.data().addedDate.toDate(),
-        user: doc.data().user,
-      });
+      if (doc.data().status != "done") {
+        errandsList.push({
+          id: doc.id,
+          title: doc.data().title,
+          notes: doc.data().notes,
+          status: doc.data().status,
+          category: doc.data().category,
+          startDate: doc.data().startDate,
+          repeat: doc.data().repeat,
+          repeatDayOfWeek: doc.data().repeatDayOfWeek,
+          repeatDayOfMonth: doc.data().repeatDayOfMonth,
+          dueDate: doc.data().dueDate,
+          time: doc.data().time,
+          addedDate: doc.data().addedDate.toDate(),
+          user: doc.data().user,
+        });
+      }
     });
     setErrandsData(errandsList);
   });
@@ -114,6 +84,24 @@ export async function editErrand(errandData: ErrandItemProps) {
       repeatDayOfWeek: errandData.repeatDayOfWeek,
       repeatDayOfMonth: errandData.repeatDayOfMonth,
       dueDate: errandData.dueDate,
+      time: errandData.time,
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function editErrandStatus(
+  errandData: ErrandItemProps,
+  newStatus: string
+) {
+  const firestore = getFirestore();
+  const docRef = doc(firestore, "errands", errandData.id);
+  try {
+    await updateDoc(docRef, {
+      status: newStatus,
     });
     return true;
   } catch (error) {

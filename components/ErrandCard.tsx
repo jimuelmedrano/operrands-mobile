@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { useTheme } from "@rneui/themed";
 import DefaultStyles from "../app/theme/defaultStyles";
@@ -9,6 +9,7 @@ import { getOrdinal, getLastDayOfTheMonth } from "../utils/date";
 import EditErrandsOverlay from "./EditErrandsOverlay";
 import { ErrandItemProps } from "../utils/interface";
 import Feather from "@expo/vector-icons/Feather";
+import { editErrandStatus } from "../utils/firebase/errandCrud";
 
 const ErrandCard = (data: { data: ErrandItemProps }) => {
   const theme = useTheme().theme;
@@ -16,6 +17,38 @@ const ErrandCard = (data: { data: ErrandItemProps }) => {
   const [visible, setVisible] = useState(false);
   const toggleOverlay = () => {
     setVisible(!visible);
+  };
+
+  const onCheck = () => {
+    console.log("checked");
+    setCheck(true);
+    let newStatus = "";
+
+    if (data.data.repeat === "Daily") {
+      newStatus = "done|" + moment(new Date()).toISOString().split("T")[0];
+    } else if (data.data.repeat === "Weekly") {
+      newStatus = "done|";
+    } else if (data.data.repeat === "Monthly") {
+      newStatus = "done|";
+    } else {
+      newStatus = "done";
+    }
+
+    Alert.alert("Errand completed!", "", [
+      {
+        text: "Undo",
+        style: "cancel",
+        onPress: () => {
+          setCheck(false);
+        },
+      },
+      {
+        text: "Okay",
+        onPress: async () => {
+          await editErrandStatus(data.data, newStatus);
+        },
+      },
+    ]);
   };
   return (
     <View style={[styles.cardContainer, { borderColor: theme.colors.primary }]}>
@@ -61,7 +94,7 @@ const ErrandCard = (data: { data: ErrandItemProps }) => {
           }}
           uncheckedColor={theme.colors.black}
           checkedColor={theme.colors.primary}
-          onPress={() => setCheck(!check)}
+          onPress={onCheck}
         />
       </View>
 
@@ -151,7 +184,7 @@ function getFooter(dataItem: ErrandItemProps) {
         ? (footerText =
             "Due: " +
             moment(dataItem.dueDate + "T" + dataItem.time).format(
-              "MMM d, YYYY - hh:mm A"
+              "MMM D, YYYY - hh:mm A"
             ))
         : ""
       : "";

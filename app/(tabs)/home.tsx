@@ -15,7 +15,7 @@ import ErrandCard from "../../components/ErrandCard";
 import HomeCategories from "../../components/HomeCategories";
 import DefaultStyles from "../theme/defaultStyles";
 import { getAuth } from "@react-native-firebase/auth";
-import { getHomeErrands } from "../../utils/firebase/errandCrud";
+import { getAllErrands } from "../../utils/firebase/errandCrud";
 import { getCategoryList } from "../../utils/firebase/categoryCrud";
 
 const home = () => {
@@ -32,7 +32,7 @@ const home = () => {
   const [categoryId, setCategoryId] = useState("");
 
   useEffect(() => {
-    getHomeErrands(auth.currentUser!.email!, setErrandsData);
+    getAllErrands(auth.currentUser!.email!, setErrandsData);
     getCategoryList(auth.currentUser!.email!, setCategories, setCategoryId);
   }, []);
 
